@@ -4,7 +4,7 @@ Live stock board UI for RupeeFarm, built with React + TypeScript + Vite + Tailwi
 
 - **Title:** Stocks (₹)
 - **Live data:** Firestore `rupeefarm/board_latest` (read-only, realtime via `onSnapshot`)
-- **Hosting target:** `rupeefarm.ravikloyi.in` (Cloudflare Pages via GitHub)
+- **Hosting target:** `rupeefarm.ravikloyi.in` (Cloudflare Workers static assets via GitHub)
 
 ## Setup
 
@@ -38,20 +38,22 @@ Use the Firebase **Web app** config from Project settings → General → Your a
 - `npm run lint` — ESLint
 - `npm test` — Vitest
 
-## Deploy to Cloudflare Pages (via GitHub)
+## Deploy to Cloudflare (Workers static assets via GitHub)
 
-1. Push this project to a GitHub repository (if `my-stocks` is the repo root, use it as-is; if it lives inside a larger repo, set the Pages **Root directory** to `my-stocks`).
-2. In **Cloudflare Dashboard → Workers & Pages → Create → Pages → Connect to Git**, select the repo.
+SPA routing is configured in `wrangler.jsonc` with `assets.not_found_handling: "single-page-application"`.
+Do **not** add a catch-all `_redirects` rule like `/* /index.html 200` — Cloudflare rejects it as an infinite loop.
+
+1. Push this project to a GitHub repository (the repo root should be this project).
+2. In **Cloudflare Dashboard → Workers & Pages → Create → Connect to Git**, select the repo (Workers Builds).
 3. Build settings:
-   - **Framework preset:** Vite (or None)
    - **Build command:** `npm run build`
-   - **Build output directory:** `dist`
-   - **Root directory:** `my-stocks` (only if applicable)
-4. Add environment variables (`VITE_FIREBASE_*`) under **Settings → Environment variables**.
-5. Deploy. SPA routing is handled by `public/_redirects` (`/* /index.html 200`).
+   - **Deploy command:** `npx wrangler deploy`
+   - **Root directory:** project root (no subdirectory)
+4. Add environment variables (`VITE_FIREBASE_*`) under **Settings → Variables and Secrets** for Production (and Preview if needed).
+5. Deploy. Unknown paths are served from `dist/index.html` by the Wrangler SPA setting.
 
 ### Custom domain `rupeefarm.ravikloyi.in`
-1. In the Cloudflare Pages project → **Custom domains → Set up a custom domain** → enter `rupeefarm.ravikloyi.in`.
+1. In the Worker project → **Settings → Domains & Routes → Add → Custom domain** → enter `rupeefarm.ravikloyi.in`.
 2. If `ravikloyi.in` is already on Cloudflare, DNS is configured automatically; otherwise add the CNAME/records Cloudflare provides at your DNS provider.
 3. Wait for DNS/SSL to become active.
 
