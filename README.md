@@ -4,7 +4,7 @@ Live stock board UI for RupeeFarm, built with React + TypeScript + Vite + Tailwi
 
 - **Title:** Stocks (₹)
 - **Live data:** Firestore `rupeefarm/board_latest` (read-only, realtime via `onSnapshot`)
-- **Hosting target:** `rupeefarm.ravikloyi.in` (Cloudflare Workers static assets via GitHub)
+- **Hosting target:** `mystocks.ravikloyi.in` (Cloudflare Workers static assets via GitHub)
 
 ## Setup
 
@@ -52,11 +52,11 @@ Do **not** add a catch-all `_redirects` rule like `/* /index.html 200` — Cloud
 4. Add environment variables (`VITE_FIREBASE_*`) under **Settings → Variables and Secrets** for Production (and Preview if needed).
 5. Deploy. Unknown paths are served from `dist/index.html` by the Wrangler SPA setting.
 
-### Custom domain `rupeefarm.ravikloyi.in`
-1. In the Worker project → **Settings → Domains & Routes → Add → Custom domain** → enter `rupeefarm.ravikloyi.in`.
+### Custom domain `mystocks.ravikloyi.in`
+1. In the Worker project → **Settings → Domains & Routes → Add → Custom domain** → enter `mystocks.ravikloyi.in`.
 2. If `ravikloyi.in` is already on Cloudflare, DNS is configured automatically; otherwise add the CNAME/records Cloudflare provides at your DNS provider.
 3. Wait for DNS/SSL to become active.
 
 ## Firestore
 
-Reads `rupeefarm/board_latest` (overwritten by RupeeFarm backend on each board update). Ensure Firestore rules allow client read of this document and deny client writes. The Firebase **Authorized domains** list should include `rupeefarm.ravikloyi.in` and your `*.pages.dev` domain if needed.
+Reads `rupeefarm/board_latest` (overwritten by RupeeFarm backend on each board update). Ensure Firestore rules allow client read of this document and deny client writes. The Firebase **Authorized domains** list should include `mystocks.ravikloyi.in` and your `*.pages.dev` domain if needed.
